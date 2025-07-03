@@ -1,0 +1,156 @@
+# llm_processing/generate_json_report.py
+import os
+import json
+
+COMPANIES = [
+    "TXG", "YI", "PIH", "PIHPP", "TURN", "FLWS", "BCOW", "ONEM", "FCCY", "SRCE",
+    "VNET", "TWOU", "QFIN", "KRKR", "JOBS", "ETNB", "JFK", "JFKKR", "JFKKU", "JFKKW",
+    "EGHT", "NMTR", "JFU", "AAON", "ABEO", "ABMD", "AXAS", "ACIU", "ACIA", "ACTG",
+    "ACHC", "ACAD", "ACAM", "ACAMU", "ACAMW", "ACST", "AXDX", "ACCP", "XLRN", "ACCD",
+    "ARAY", "ACLL", "ACRX", "ACER", "ACHV", "ACIW", "ACRS", "ACMR", "ACNB", "ACOR",
+    "ATVI"
+]
+def generate_mock_cfo_summary(symbol: str, year: str):
+    report = {
+        "Executive_Summary": {
+            "Revenue": f"{symbol} generated total revenue of $62.75 billion in FY {year}, with a gross profit of $35.55 billion.",
+            "Profitability": "Operating income of $5.9 billion, net income of $6.02 billion, and EBIT of $7.52 billion.",
+            "Cash_Flow": "Strong operating cash flow of $13.45 billion, with solid dividend payouts of $6.15 billion.",
+            "Balance_Sheet": "Total assets of $137.18 billion with substantial goodwill and intangible assets. Debt-to-equity ratio of 4.02."
+        },
+        "Income_Statement": {
+            f"FY_{year}": {
+                "Total_Revenue": "62.75 billion USD",
+                "Gross_Profit": "35.55 billion USD",
+                "Operating_Income": "5.9 billion USD",
+                "Net_Income": "6.02 billion USD",
+                "EBIT": "7.52 billion USD",
+                "EBITDA": "10.02 billion USD",
+                "Interest_Expense": "1.71 billion USD",
+                "Research_And_Development": "7.48 billion USD",
+                "Selling_General_And_Administrative": "19.69 billion USD"
+            },
+            "FY_2023": {
+                "Total_Revenue": "61.86 billion USD",
+                "Gross_Profit": "34.3 billion USD",
+                "Operating_Income": "6.98 billion USD",
+                "Net_Income": "7.50 billion USD",
+                "EBIT": "10.29 billion USD",
+                "EBITDA": "12.57 billion USD",
+                "Interest_Expense": "1.61 billion USD",
+                "Research_And_Development": "6.78 billion USD",
+                "Selling_General_And_Administrative": "19.00 billion USD"
+            }
+        },
+        "Balance_Sheet": {
+            f"FY_{year}": {
+                "Total_Assets": "137.18 billion USD",
+                "Total_Liabilities": "109.78 billion USD",
+                "Shareholder_Equity": "27.31 billion USD",
+                "Debt_to_Equity": "4.02",
+                "Current_Assets": "34.48 billion USD",
+                "Non_Current_Assets": "101.99 billion USD",
+                "Goodwill": "60.71 billion USD",
+                "Intangible_Assets": "71.37 billion USD"
+            },
+            "FY_2023": {
+                "Total_Assets": "135.24 billion USD",
+                "Total_Liabilities": "112.63 billion USD",
+                "Shareholder_Equity": "22.53 billion USD",
+                "Debt_to_Equity": "5.00",
+                "Current_Assets": "32.91 billion USD",
+                "Non_Current_Assets": "101.30 billion USD",
+                "Goodwill": "60.18 billion USD",
+                "Intangible_Assets": "71.21 billion USD"
+            }
+        },
+        "Cash_Flow_Statement": {
+            f"FY_{year}": {
+                "Operating_Cashflow": "13.45 billion USD",
+                "Capital_Expenditures": "1.05 billion USD",
+                "Dividend_Payout": "6.15 billion USD",
+                "Cashflow_From_Investment": "-4.94 billion USD",
+                "Cashflow_From_Financing": "-7.08 billion USD",
+                "Proceeds_From_Long_Term_Debt": "5.71 billion USD",
+                "Net_Income": "6.02 billion USD"
+            },
+            "FY_2023": {
+                "Operating_Cashflow": "13.93 billion USD",
+                "Capital_Expenditures": "1.25 billion USD",
+                "Dividend_Payout": "6.04 billion USD",
+                "Cashflow_From_Investment": "-7.07 billion USD",
+                "Cashflow_From_Financing": "-1.77 billion USD",
+                "Proceeds_From_Long_Term_Debt": "9.59 billion USD",
+                "Net_Income": "7.50 billion USD"
+            }
+        },
+        "Statement_of_Shareholders_Equity": {
+            f"FY_{year}": {
+                "Retained_Earnings": "151.16 billion USD",
+                "Common_Stock": "61.38 billion USD",
+                "Treasury_Stock": "169.97 billion USD",
+                "Shares_Outstanding": "926,290,070"
+            },
+            "FY_2023": {
+                "Retained_Earnings": "151.28 billion USD",
+                "Common_Stock": "59.64 billion USD",
+                "Treasury_Stock": "169.62 billion USD",
+                "Shares_Outstanding": "915,013,646"
+            }
+        },
+        "Budget_vs_Actual_Analysis": {
+            "Revenue_Performance": "Revenue for FY 2024 exceeded expectations, growing by 6.4% compared to FY 2023.",
+            "Operating_Income_Performance": "Operating income in FY 2024 remained consistent with budget projections, despite some increases in expenses.",
+            "Tax_Considerations": "Tax expense in FY 2024 reflects favorable positioning in the market, optimizing the overall tax strategy."
+        },
+        "Key_Performance_Indicators": {
+            "Revenue_Growth": "6.4% year-over-year increase in revenue.",
+            "Operating_Margin": "Operating income margin of 9.4%.",
+            "EBIT_Margin": "EBIT margin of approximately 12%.",
+            "Debt_to_Equity": "4.02 (indicating high financial leverage).",
+            "Dividend_Payout": "Robust dividend payout of $6.15 billion."
+        },
+        "Management_Discussion_and_Analysis": {
+            "Strategic_Focus": "Focused on advancing AI, cloud, and innovation.",
+            "Growth_Opportunities": "Investing in cutting-edge technologies and acquisitions.",
+            "Operational_Challenges": "Navigating inflation and market volatility while maintaining profitability."
+        },
+        "Financial_Ratios_and_Analysis": {
+            "Gross_Profit_Margin": "56.6%",
+            "Operating_Margin": "9.4%",
+            "Debt_to_Equity_Ratio": "4.02",
+            "Return_on_Assets": "0% (as reported, no ROA value available)."
+        },
+        "Audit_Report": "Not available in the provided data.",
+        "Tax_Considerations": {
+            "Tax_Strategy": "Minimized overall tax expenses, contributing to profitability."
+        },
+        "Management_Financial_Strategy": {
+            "Focus_Areas": "Capital efficiency, leveraging debt for growth, investing in innovation.",
+            "Dividend_Strategy": "Maintain robust dividends while investing in R&D and acquisitions."
+        },
+        "Notes_to_Financial_Statements": {
+            "Note_1": "High reliance on intangible assets and goodwill.",
+            "Note_2": "Operating income increase due to efficiency despite rising costs.",
+            "Note_3": "Ongoing focus on managing high debt-to-equity ratio.",
+            "Note_4": "Strategic investments in R&D are increasing.",
+            "Note_5": "Consistent dividends show commitment to shareholders."
+        }
+    }
+
+    os.makedirs("data/reports", exist_ok=True)
+    out_path = f"data/reports/{symbol}_{year}_cfo_report.json"
+    with open(out_path, "w") as f:
+        json.dump(report, f, indent=4)
+    return out_path
+
+def generate_all_companies(year: str = "2024"):
+    for symbol in COMPANIES:
+        try:
+            generate_mock_cfo_summary(symbol, year)
+            print(f"✅ Generated mock report for {symbol}")
+        except Exception as e:
+            print(f"❌ Failed for {symbol}: {e}")
+
+if __name__ == "__main__":
+    generate_all_companies("2024")

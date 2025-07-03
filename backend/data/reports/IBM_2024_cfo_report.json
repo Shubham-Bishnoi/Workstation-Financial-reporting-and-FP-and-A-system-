@@ -1,0 +1,33 @@
+{
+    "Executive_Summary": {
+        "Revenue": "IBM generated total revenue of $62.75 billion in FY 2024, with a gross profit of $35.55 billion.",
+        "Profitability": "Operating income of $5.9 billion, net income of $6.02 billion, and EBIT of $7.52 billion.",
+        "Cash_Flow": "Strong operating cash flow of $13.45 billion, with solid dividend payouts of $6.15 billion.",
+        "Balance_Sheet": "Total assets of $137.18 billion with substantial goodwill and intangible assets. Debt-to-equity ratio of 4.02."
+    },
+    "Income_Statement": {
+        "FY_2024": {
+            "Total_Revenue": "62.75 billion USD",
+            "Gross_Profit": "35.55 billion USD",
+            "Operating_Income": "5.9 billion USD",
+            "Net_Income": "6.02 billion USD",
+            "EBIT": "7.52 billion USD",
+            "EBITDA": "10.02 billion USD",
+            "Interest_Expense": "1.71 billion USD",
+            "Research_And_Development": "7.48 billion USD",
+            "Selling_General_And_Administrative": "19.69 billion USD"
+        }
+    },
+    "Balance_Sheet": {
+        "FY_2024": {
+            "Total_Assets": "137.18 billion USD",
+            "Total_Liabilities": "109.78 billion USD",
+            "Shareholder_Equity": "27.31 billion USD",
+            "Debt_to_Equity": "4.02",
+            "Current_Assets": "34.48 billion USD",
+            "Non_Current_Assets": "101.99 billion USD",
+            "Goodwill": "60.71 billion USD",
+            "Intangible_Assets": "71.37 billion USD"
+        }
+    }
+}
